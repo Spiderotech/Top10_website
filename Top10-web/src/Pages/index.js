@@ -1,0 +1,6 @@
+export{default as Homepage}from './Homepage'
+export{default as Adswithpage}from './AdvertiseWith_uspage'
+export{default as TopITpage}from './TopIT_companypage'
+export{default as TopInsurancepage}from './InsuranceCompaniespage'
+export{default as About}from './Aboutpage'
+export{default as Contact}from './Contactpage'
