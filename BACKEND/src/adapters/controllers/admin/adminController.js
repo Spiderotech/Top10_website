@@ -4,7 +4,8 @@ import getcompanydatas from "../../../application/useCase/admin/Getcompanydata.j
 import getTypewisedata from "../../../application/useCase/admin/Getstypecompanydata.js"
 import getsinglecompany from "../../../application/useCase/admin/Getsinglecompany.js"
 import removecompanydata from "../../../application/useCase/admin/Removecompanydata.js"
-import editcompanydata from "../../../application/useCase/admin/editcompanydatas.js"
+import editcompanydata from "../../../application/useCase/admin/Editcompanydatas.js"
+
 
 const adminController = (adminrepositoryInt,adminRepositoryImp,adminserviceInt,adminServiceImp) => {
 
