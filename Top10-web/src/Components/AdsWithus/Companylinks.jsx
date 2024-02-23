@@ -50,7 +50,7 @@ const Companylinks = () => {
        
         
       </div>
-      <div className="w-full md:w-[50%] h-40  bg-yellow-200"></div>
+      {/* <div className="w-full md:w-[50%] h-40  bg-yellow-200"></div> */}
     </div>
   );
 };

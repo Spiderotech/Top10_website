@@ -3,7 +3,7 @@ import Listingcard from '../Listingcard'
 import { useEffect, useState } from 'react';
 import axios from "../../Components/Admin/Utils/axios";
 
-const Listview = () => {
+const  Listview = () => {
     const [property, setProperty] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(2); 
