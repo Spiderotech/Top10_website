@@ -1,11 +1,10 @@
-import login from "../../../application/useCase/admin/Login.js"
+import login from "../../../application/useCase/admin/login.js"
 import addcompanydata from "../../../application/useCase/admin/Addcompanydatas.js"
 import getcompanydatas from "../../../application/useCase/admin/Getcompanydata.js"
 import getTypewisedata from "../../../application/useCase/admin/Getstypecompanydata.js"
 import getsinglecompany from "../../../application/useCase/admin/Getsinglecompany.js"
 import removecompanydata from "../../../application/useCase/admin/Removecompanydata.js"
-import editcompanydata from "../../../application/useCase/admin/Editcompanydatas.js"
-
+import editcompanydata from "../../../application/useCase/admin/editcompanydatas.js"
 
 const adminController = (adminrepositoryInt,adminRepositoryImp,adminserviceInt,adminServiceImp) => {
 
