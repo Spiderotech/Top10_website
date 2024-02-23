@@ -39,7 +39,7 @@ function AdminRoutes() {
       <Route path="/dashboard" element={<Dashboardpage />} />
       <Route path="/companylist" element={<Companydatapage />} />
       <Route path="/dataform" element={<Companyfrompage />} />
-      <Route path="/dataformedit" element={<Dataeditpage />} />
+      <Route path="/dataformedit/:Id" element={<Dataeditpage />} />
     </Routes>
   );
 }

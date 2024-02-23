@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import axios from "../Utils/axios";
 import Axios from "../Utils/Service/axios";
 import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const Editdataform = () => {
   const navigate = useNavigate();
@@ -13,25 +13,30 @@ const Editdataform = () => {
   const [companies, setCompanies] = useState({});
   const [currentService, setCurrentService] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const IdParam = queryParams.get("Id");
+  const [loading, setLoading] = useState(true);
+  const { Id } = useParams();
+
   
 
-//   console.log(IdParam, "olooo");
-
   useEffect(() => {
-    axios
-      .get("/getsinglecompanydata?id=" + IdParam)
-      .then((response) => {
-        console.log(response.data.data);
-        setCompanies(response.data.data);
-      })
-      .catch((error) => {
-        console.error(error.message);
-      });
-  }, []);
+    if (Id) {
+      axios
+        .get("/getsinglecompanydata?id=" + Id)
+        .then((response) => {
+          const companyData = response.data.data[0];
+          setCompanies(companyData);
+          setServices(companyData.services || []);
+          setSelectedFile(companyData.image || null);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error(error.message);
+          setLoading(false);
+        });
+    }
+  }, [Id]);
 
+ 
   const handleAddService = (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -57,17 +62,17 @@ const Editdataform = () => {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-        companyType: companies?.companyType || "",
-        companyName: companies?.companyName || "",
-        about: companies?.about || "",
-        profileImage: companies?.profileImage || null,
-        websiteLink: companies?.websiteLink || "",
-        location: companies?.location || "",
-        email: companies?.email || "",
-        numberOfEmployees: companies?.numberOfEmployees || "",
-        year: companies?.year || "",
-        services: companies?.services || [],
-      },
+      companyType: companies?.companyType || "",
+      companyName: companies?.companyName || "",
+      about: companies?.about || "",
+      profileImage:companies?.image || null,
+      websiteLink: companies?.websiteLink || "",
+      location: companies?.location || "",
+      email: companies?.email || "",
+      numberOfEmployees: companies?.numberOfEmployees || "",
+      year: companies?.year || "",
+      services: companies?.services || [],
+    },
     validationSchema: Yup.object({
       companyType: Yup.string().required("Required"),
       companyName: Yup.string().required("Required"),
@@ -81,65 +86,78 @@ const Editdataform = () => {
     }),
     onSubmit: async (values) => {
       const fileimg = values.profileImage;
-      if (!fileimg) {
-        formik.setFieldError("image", "Image is required");
+     
+    
+      if (fileimg) {
+        try {
+          const imageResponse = await Axios.get("/s3service");
+          imageUrl = imageResponse.data.response;
+    
+          const imageUploadResponse = await fetch(imageUrl, {
+            method: "PUT",
+            body: fileimg,
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
+    
+          const userimage = imageUrl.split("?")[0];
+          formik.setFieldValue("userimage", userimage);
+        } catch (error) {
+          console.error("Error uploading image:", error);
+          
+        }
       }
-
+      let imageUrl = companies.image; 
+      const body = {
+        Id:Id,
+        companyType: values.companyType,
+        companyName: values.companyName,
+        websiteLink: values.websiteLink,
+        about: values.about,
+        location: values.location,
+        email: values.email,
+        image: imageUrl,
+        numberOfEmployees: values.numberOfEmployees,
+        year: values.year,
+        services: services,
+      };
+      
+    
       try {
-        const imageResponse = await Axios.get("/s3service");
-        const imageUrl = imageResponse.data.response;
+        const response = await axios.post("/editcompanydata", body);
 
-        const imageUploadResponse = await fetch(imageUrl, {
-          method: "PUT",
-          body: fileimg,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-
-        const userimage = imageUrl.split("?")[0];
-        console.log(userimage);
-        formik.setFieldValue("userimage", userimage);
-
-        const body = {
-          companyType: values.companyType,
-          companyName: values.companyName,
-          websiteLink: values.websiteLink,
-          about: values.about,
-          location: values.location,
-          email: values.email,
-          image: userimage,
-          numberOfEmployees: values.numberOfEmployees,
-          year: values.year,
-          services: services,
-        };
-        console.log(body);
-
-        const response = await axios.post("/addcompanydata", body);
-
+        console.log(response.data);
+    
         if (response.data.status === true) {
           navigate("/admin/companylist");
         } else {
           console.log("error");
         }
       } catch (error) {
-        console.error("Error uploading image:", error);
+        console.error("Error adding company data:", error);
+        
       }
-    },
+    }
+    
   });
-  console.log(formik.initialValues,"pooo");
   const handleImageChange = (event) => {
     const file = event.currentTarget.files[0];
     formik.setFieldValue("profileImage", file);
     setSelectedFile(file);
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="w-[80%] p-20 ">
       <form onSubmit={formik.handleSubmit}>
         <div className="space-y-12">
           <div className="border-b border-gray-900/10 pb-12">
             <h2 className="text-base font-semibold leading-7 text-gray-900">
-              Company details
+              Edit the Company details
             </h2>
             <p className="mt-1 text-sm leading-6 text-gray-600">
               This information will be displayed publicly so be careful what you
@@ -169,9 +187,9 @@ const Editdataform = () => {
                       <option value="Insurance">Insurance</option>
                     </select>
                     {formik.touched.email && formik.errors.companyType && (
-                      <span  className="text-red-500 text-sm">
+                      <span className="text-red-500 text-sm">
                         {formik.errors.email}
-                      </span >
+                      </span>
                     )}
                   </div>
                 </div>
@@ -196,9 +214,9 @@ const Editdataform = () => {
                       value={formik.values.companyName}
                     />
                     {formik.touched.email && formik.errors.companyName && (
-                      <span  className="text-red-500 text-sm mt-2 mr-2">
+                      <span className="text-red-500 text-sm mt-2 mr-2">
                         {formik.errors.companyName}
-                      </span >
+                      </span>
                     )}
                   </div>
                 </div>
@@ -223,12 +241,12 @@ const Editdataform = () => {
                   />
                 </div>
                 <p className="mt-3 text-sm leading-6 text-gray-600">
-                  Write a few sentences about yourself.
+                  Write a few sentences about company.
                 </p>
                 {formik.touched.email && formik.errors.about && (
-                  <span  className="text-red-500 text-sm mt-2 mr-2">
+                  <span className="text-red-500 text-sm mt-2 mr-2">
                     {formik.errors.about}
-                  </span >
+                  </span>
                 )}
               </div>
               <div className="col-span-full">
@@ -267,21 +285,32 @@ const Editdataform = () => {
                         />
                         {formik.touched.profileImage &&
                           formik.errors.profileImage && (
-                            <span  className="text-red-500 text-sm mt-2 mr-2">
+                            <span className="text-red-500 text-sm mt-2 mr-2">
                               {formik.errors.profileImage}
-                            </span >
+                            </span>
                           )}
                       </label>
                     </div>
                     <p className="text-xs leading-5 text-gray-600">
                       PNG, JPG, GIF up to 10MB
                     </p>
-                    {selectedFile && (
+                    {typeof selectedFile === "string" ? (
+                     
                       <img
-                        src={URL.createObjectURL(selectedFile)}
+                        src={selectedFile}
                         alt="Selected Image"
                         className="mt-4 max-w-full"
                       />
+                    ) : (
+                      
+                     
+                      (
+                        <img
+                          src={URL.createObjectURL(selectedFile)}
+                          alt="Selected Image"
+                          className="mt-4 max-w-full"
+                        />
+                      )
                     )}
                   </div>
                 </div>
@@ -306,9 +335,9 @@ const Editdataform = () => {
                       value={formik.values.websiteLink}
                     />
                     {formik.touched.email && formik.errors.websiteLink && (
-                      <span  className="text-red-500 text-sm mt-2 mr-2">
+                      <span className="text-red-500 text-sm mt-2 mr-2">
                         {formik.errors.websiteLink}
-                      </span >
+                      </span>
                     )}
                   </div>
                 </div>
@@ -340,9 +369,9 @@ const Editdataform = () => {
                     value={formik.values.location}
                   />
                   {formik.touched.email && formik.errors.location && (
-                    <span  className="text-red-500 text-sm mt-2 mr-2">
+                    <span className="text-red-500 text-sm mt-2 mr-2">
                       {formik.errors.location}
-                    </span >
+                    </span>
                   )}
                 </div>
               </div>
@@ -365,9 +394,9 @@ const Editdataform = () => {
                     value={formik.values.email}
                   />
                   {formik.touched.email && formik.errors.email && (
-                    <span  className="text-red-500 text-sm mt-2 mr-2">
+                    <span className="text-red-500 text-sm mt-2 mr-2">
                       {formik.errors.email}
-                    </span >
+                    </span>
                   )}
                 </div>
               </div>
@@ -393,9 +422,9 @@ const Editdataform = () => {
                     <option>50-200</option>
                   </select>
                   {formik.touched.email && formik.errors.numberOfEmployees && (
-                    <span  className="text-red-500 text-sm mt-2 mr-2">
+                    <span className="text-red-500 text-sm mt-2 mr-2">
                       {formik.errors.numberOfEmployees}
-                    </span >
+                    </span>
                   )}
                 </div>
               </div>
@@ -418,9 +447,9 @@ const Editdataform = () => {
                     value={formik.values.year}
                   />
                   {formik.touched.email && formik.errors.year && (
-                    <span  className="text-red-500 text-sm mt-2 mr-2">
+                    <span className="text-red-500 text-sm mt-2 mr-2">
                       {formik.errors.year}
-                    </span >
+                    </span>
                   )}
                 </div>
               </div>

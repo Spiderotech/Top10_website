@@ -4,7 +4,10 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "../Utils/axios";
 import Axios from "../Utils/Service/axios";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import { countries } from 'countries-list';
+import Select from 'react-select';
+
 
 const Dataform = () => {
   const navigate = useNavigate();
@@ -94,14 +97,12 @@ const Dataform = () => {
         };
         console.log(body);
 
-     
         const response = await axios.post("/addcompanydata", body);
 
         if (response.data.status === true) {
           navigate("/admin/companylist");
-        }else{
+        } else {
           console.log("error");
-
         }
       } catch (error) {
         console.error("Error uploading image:", error);
@@ -113,6 +114,10 @@ const Dataform = () => {
     formik.setFieldValue("profileImage", file);
     setSelectedFile(file);
   };
+  const countryOptions = Object.keys(countries).map((code) => ({
+    value:countries[code].name,
+    label: countries[code].name,
+  }));
 
   return (
     <div className="w-[80%] p-20 ">
@@ -311,16 +316,17 @@ const Dataform = () => {
                   Location
                 </label>
                 <div className="mt-2">
-                  <input
-                    type="text"
-                    name="location"
-                    id="location"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    onChange={formik.handleChange}
+                  <Select
+                    options={countryOptions}
+                    onChange={(selectedOption) =>
+                      formik.setFieldValue("location", selectedOption.value)
+                    }
                     onBlur={formik.handleBlur}
-                    value={formik.values.location}
+                    value={countryOptions.find(
+                      (option) => option.value === formik.values.location
+                    )}
                   />
-                  {formik.touched.email && formik.errors.location && (
+                  {formik.touched.location && formik.errors.location && (
                     <p className="text-red-500 text-sm mt-2 mr-2">
                       {formik.errors.location}
                     </p>

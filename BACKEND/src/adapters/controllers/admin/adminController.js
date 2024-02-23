@@ -3,10 +3,12 @@ import addcompanydata from "../../../application/useCase/admin/Addcompanydatas.j
 import getcompanydatas from "../../../application/useCase/admin/Getcompanydata.js"
 import getTypewisedata from "../../../application/useCase/admin/Getstypecompanydata.js"
 import getsinglecompany from "../../../application/useCase/admin/Getsinglecompany.js"
+import removecompanydata from "../../../application/useCase/admin/Removecompanydata.js"
+import editcompanydata from "../../../application/useCase/admin/editcompanydatas.js"
 
 const adminController = (adminrepositoryInt,adminRepositoryImp,AuthServiceInt,adminServiceImp) => {
 
-    const dbrepository = adminrepositoryInt(adminRepositoryImp())
+    const   dbrepository = adminrepositoryInt(adminRepositoryImp())
     const Service = AuthServiceInt(adminServiceImp())
 
     const adminLogin = (req, res) => {
@@ -66,7 +68,31 @@ const adminController = (adminrepositoryInt,adminRepositoryImp,AuthServiceInt,ad
         }).catch((err)=>console.log(err))
     
      }
+     const removecompany=(req,res)=>{
 
+        const {Id} = req.body
+        console.log(Id,"ploooo");
+        removecompanydata(Id,dbrepository).then((response)=>{
+            res.json(response)
+    
+        }).catch((err)=>console.log(err))
+    
+    
+     }
+
+     const editedata= (req, res) => {
+        console.log(req.body,"editting data" );
+
+        const{Id,companyType,companyName,websiteLink,about,location,image,numberOfEmployees,year,services,email}=req.body
+
+        editcompanydata(Id,companyType,companyName,websiteLink,about,location,image,numberOfEmployees,year,services,email,dbrepository).then((response) => {
+
+            res.json(response)
+
+        }).catch((err) => console.log(err))
+
+    }
+ 
  
     return {
       
@@ -74,7 +100,9 @@ const adminController = (adminrepositoryInt,adminRepositoryImp,AuthServiceInt,ad
         createcompanydata,
         getallcompanydata,
         selectcompanydata,
-        selectsinglecompanydata
+        selectsinglecompanydata,
+        removecompany,
+        editedata
        
         
     }

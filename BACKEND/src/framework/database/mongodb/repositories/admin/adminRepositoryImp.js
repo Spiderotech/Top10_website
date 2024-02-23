@@ -75,13 +75,59 @@ const adminRepositoryImp = () => {
         }
     
       }
+      const removcompanydatas = async (Id) => {
+        console.log(Id, "loppp");
+        try {
+          console.log(Id, "Deleting property...");
+          const deletedProperty = await companydata.deleteOne({ _id:Id });
+    
+          if (deletedProperty.deletedCount > 0) {
+            console.log("deleted successfully!");
+            return true;
+          } else {
+            console.log(`No data found with postId ${Id}.`);
+            return false;
+          }
+        } catch (error) {
+          console.error("Error deleting data:", error.message);
+          return false;
+        }
+      };
+
+
+      const Updatecompanydata = async (Id,data) => {
+        console.log(data,"pooo");
+        const profile = await companydata.findOneAndUpdate(
+          { _id: Id },
+          {
+            companyType:data?.getcompanytype(),
+            companyName:data?.getcompanyname(),
+            websiteLink:data?.getwebsite(),
+            about:data?.getabout(),
+            location:data?.getlocation(),
+            image:data?.getimage(),
+            numberOfEmployees:data?.getnumberOfEmployees(),
+            year:data?.getyear(),
+            services:data?.getservice(),
+            email:data?.getemail(),
+          
+           
+          },
+          { new: true }
+        );
+    
+        console.log(profile, "updation");
+        return profile;
+      };
     
       return {
         adminExist,
         create,
         getAllCompanies,
         typewisedata,
-        singlecompany
+        singlecompany,
+        removcompanydatas,
+        Updatecompanydata
       };
 
 

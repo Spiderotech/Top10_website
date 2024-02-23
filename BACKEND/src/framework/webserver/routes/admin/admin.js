@@ -17,6 +17,8 @@ const admin = (express) => {
     router.route('/getallcompanydata').get(controller.getallcompanydata)
     router.route('/getcompanydata').get(controller.selectcompanydata)
     router.route('/getsinglecompanydata').get(controller.selectsinglecompanydata)
+    router.route('/removecompany').post(controller.removecompany)
+    router.route('/editcompanydata').post(controller.editedata)
 
     return router;
  
