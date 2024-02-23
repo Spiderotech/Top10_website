@@ -1,8 +1,8 @@
 import adminController from "../../../../adapters/controllers/admin/adminController.js"
 import adminRepositoryImp from "../../../database/mongodb/repositories/admin/adminRepositoryImp.js"
-import adminrepositoryInt from "../../../../application/repositories/admin/adminrepositoryInt.js"
 import AuthServiceInt from "../../../../application/services/admin/adminserviceInt.js"
 import adminServiceImp from "../../../services/admin/adminServiceImp.js"
+import adminrepositoryInt from "../../../../application/repositories/admin/adminrepositoryInt.js"
 
 
 
