@@ -6,10 +6,10 @@ import getsinglecompany from "../../../application/useCase/admin/Getsinglecompan
 import removecompanydata from "../../../application/useCase/admin/Removecompanydata.js"
 import editcompanydata from "../../../application/useCase/admin/editcompanydatas.js"
 
-const adminController = (adminrepositoryInt,adminRepositoryImp,AuthServiceInt,adminServiceImp) => {
+const adminController = (adminrepositoryInt,adminRepositoryImp,adminserviceInt,adminServiceImp) => {
 
     const   dbrepository = adminrepositoryInt(adminRepositoryImp())
-    const Service = AuthServiceInt(adminServiceImp())
+    const Service = adminserviceInt(adminServiceImp())
 
     const adminLogin = (req, res) => {
         const { email, password } = req.body

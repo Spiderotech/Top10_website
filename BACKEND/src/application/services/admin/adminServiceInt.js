@@ -1,6 +1,6 @@
 
 
-const AuthServiceInt=(repository)=>{
+const adminserviceInt=(repository)=>{
 
     const bcryptpassword = (password) => repository.bcryptpassword(password);
     const comparePassword = (password, hashPassword) => repository.comparePassword(password, hashPassword);
@@ -21,4 +21,4 @@ const AuthServiceInt=(repository)=>{
     }
 
 }
-export default AuthServiceInt
+export default adminserviceInt
