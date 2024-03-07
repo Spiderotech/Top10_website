@@ -5,11 +5,11 @@ const Listingcard = ({ item }) => {
     <div className="w-FULL h-auto  border-2 rounded-md  flex  flex-col md:flex-row justify-center items-center p-5 mb-5">
       <div className="w-full  h-auto  flex flex-col justify-between">
         <div className="w-full h-auto  flex flex-row items-center justify-between">
-          <div className="flex flex-row">
+          <div className="flex lg:flex-row flex-col">
             <img
               src={item.image}
               alt="Tania Andrew"
-              class="relative inline-block h-[80px] w-[200px] object-cover object-center p-1"
+              class="relative inline-block h-[80px] w-[200px] object-contain object-center p-1"
             />
             <div>
               <h5 class="block font-sans text-xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900 mt-5 ml-3">
@@ -52,7 +52,7 @@ const Listingcard = ({ item }) => {
         </div>
       </div>
       <div className=" w-full md:w-[30%] h-auto bg-white  md:border-l-2 ml-4">
-        <div class="w-full h-44  flex flex-col p-10  ">
+        <div class="w-full h-44  flex flex-col lg:p-10 p-5  ">
           <div class=" flex flex-row mb-5">
             <svg
               xmlns="http://www.w3.org/2000/svg"

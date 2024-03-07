@@ -198,19 +198,19 @@ const Navbar = () => {
                   )}
                 </Disclosure>
                 <a
-                  href="/ourprocess"
+                  href="/about"
                   className="-mx-3 block rounded-lg px-3 py-2 text-lg font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
                    About Us
                 </a>
                 <a
-                  href="/ourprocess"
+                  href="/contact-us"
                   className="-mx-3 block rounded-lg px-3 py-2 text-lg font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
                  Contact Us
                 </a>
                 <a
-                  href="/ourprocess"
+                  href="/advertise-with-us"
                   className="-mx-3 block rounded-lg px-3 py-2 text-lg font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   Advertise With us
