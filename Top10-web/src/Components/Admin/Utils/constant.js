@@ -1,1 +1,1 @@
-export const baseUrl = "https://day2daysupermarket.com//api/v1/admin"  
+export const baseUrl = "https://day2daysupermarket.com/api/v1/admin"  
