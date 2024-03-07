@@ -3,7 +3,7 @@ dotenv.config()
 
 export default {
 
-    port: process.env.PORT,
+    port:"3000",
     mongo: {
         uri: "mongodb+srv://cloud:I6WmTqosSvleUe0i@cluster0.4ww5r6f.mongodb.net/Top_Companies"
     },
