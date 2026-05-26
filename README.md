@@ -138,10 +138,7 @@ npm run lint
 npm start
 ```
 
-## Documentation
 
-- [Project Documentation](docs/PROJECT_DOCUMENTATION.md)
-- [Hosting Documentation](docs/HOSTING_DOCUMENTATION.md)
 
 ## Important Security Note
 
